@@ -5,7 +5,7 @@ Shop app using ruby
 # Setup
 
 1) Clone the repository
-2) run `ruby main.rb` (Make sure it has executable permission)
+2) run `ruby main.rb`
 
 # Issues
 
