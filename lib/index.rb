@@ -1,10 +1,11 @@
-require_relative 'inititem.rb'
-require_relative 'item.rb'
-items = Inititem.new
+require_relative "item.rb"
+require_relative "lineitem.rb"
+require_relative "inititem.rb"
+require_relative 'cart.rb'
+$items = Inititem.new
+$cart = Cart.new
 # This is class Index
 class Index
-
-  choice = 0
 
   def showMenu
     puts ("1. Display all Items")
@@ -25,25 +26,21 @@ class Index
       choice = gets.chomp.to_i
       case choice
       when 1
-        items = Inititem.new
-        items.showInitItem
+        $items.showInitItem
         showCartMenu
         puts 'Enter choice'
         innerchoice()
-        break
       when 2
-        puts "Showing..."
-        break
+        $cart.show_line_item
       when 3
-        puts('Generate your bill')
-        break
+        $cart.cart_total
       when 0
         exit(0)
         break
       else
         puts 'Wrong input'
       end
-      break if choice == 0
+      break if choice == 'q'
     end
   end
 
@@ -51,8 +48,7 @@ class Index
     choice = gets.chomp.to_i
     case choice
     when 1
-      items = Inititem.new
-      items.checkItem
+      $items.checkItem
     else
       puts 'Wrong input'
     end
