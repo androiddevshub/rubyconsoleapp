@@ -1,4 +1,4 @@
-# Parking Lot Problem
+# Shopping application
 
 Shop app using ruby
 
