@@ -2,10 +2,14 @@ require_relative "item.rb"
 require_relative "lineitem.rb"
 require_relative "inititem.rb"
 require_relative 'cart.rb'
-$items = Inititem.new
-$cart = Cart.new
+require_relative 'dbconn.rb'
+
+
 # This is class Index
-class Index
+class Home
+
+  @@items = Inititem.new
+  @@cart = Cart.new
 
   def showMenu
     puts ("1. Display all Items")
@@ -26,21 +30,20 @@ class Index
       choice = gets.chomp.to_i
       case choice
       when 1
-        $items.showInitItem
+        @@items.showInitItem
         showCartMenu
         puts 'Enter choice'
         innerchoice()
       when 2
-        $cart.show_line_item
+        @@cart.show_line_item
       when 3
-        $cart.cart_total
+        @@cart.cart_total
       when 0
         exit(0)
-        break
       else
         puts 'Wrong input'
       end
-      break if choice == 'q'
+      break if choice == '0'
     end
   end
 
@@ -48,15 +51,9 @@ class Index
     choice = gets.chomp.to_i
     case choice
     when 1
-      $items.checkItem
+      @@items.checkItem
     else
       puts 'Wrong input'
     end
   end
 end
-
-index = Index.new
-
-puts('--------------------Welcome to Feel Free to Eat-----------------------')
-puts('')
-index.menu

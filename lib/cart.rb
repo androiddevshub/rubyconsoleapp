@@ -2,6 +2,7 @@
 require_relative "item.rb"
 require_relative "lineitem.rb"
 require_relative "inititem.rb"
+require_relative 'dbconn.rb'
 class Cart
   attr_accessor :line_items
   def initialize
@@ -9,9 +10,15 @@ class Cart
   end
 
   def show_line_item
-    puts "Item Id.\t Item price\t Quantity\t Item Name"
-    @line_items.each do |c|
-      puts "#{c.items.id}\t\t #{c.items.price}\t\t #{c.quantity}\t\t #{c.items.name}"
+    begin
+      results = Connection.conn.query("SELECT * from cart")
+      puts 'Id        Price        Quantity        Name'
+      results.each do |row|
+        puts row["item_id"].to_s + "        " + row["item_price"].to_s +  "           " + row["item_quantity"].to_s +  "               " + row["item_name"]
+      end
+      results.free
+    rescue
+      Connection.conn.close
     end
   end
 
