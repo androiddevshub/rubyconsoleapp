@@ -1,3 +1,4 @@
+# This is class Item
 class Item
   attr_accessor :id, :name, :price, :stock
   def initialize(id, name, price, stock)
