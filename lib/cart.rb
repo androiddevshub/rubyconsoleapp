@@ -59,17 +59,16 @@ class Cart
     puts '-------------------------------------------------------------------------'
     puts '|                              Invoice                                   |'
     puts '| Name : '+ uname + '                                   Date : 17.02.2019|'
-    puts '| Address : '+ uadd + "                                 Order Id : " + order_id + ' |'
+    puts '| Address : '+ uadd + "                                 Order Id : " + order_id + '    |'
     puts '|                                                                        |'
     puts '|                                                                        |'
     puts '|                                                                        |'
     puts '|                                                                        |'
-    puts "| Item Id.\t Item price\t Quantity\t Item Name             |"
+    puts "| Item Id.\t Item price\t Quantity\t Item Name                |"
     begin
       results = Connection.conn.query("SELECT * from cart")
-      puts 'Id        Price        Quantity        Name'
       results.each do |row|
-        puts "| #{row["item_id"].to_s}\t\t #{row["item_price"].to_s}\t\t #{row["item_quantity"].to_s}\t\t #{row["item_name"]}                 |"
+        puts "| #{row["item_id"].to_s}\t\t #{row["item_price"].to_s}\t\t #{row["item_quantity"].to_s}\t\t #{row["item_name"]}               |"
       end
       results.free
     rescue TypeError => e
@@ -80,7 +79,7 @@ class Cart
     puts '|                                                                        |'
     puts '|                                                                        |'
     puts '|                                                                        |'
-    puts "| Total : " + @@total.to_s + '                                                             |'
+    puts "| Total : " + @@total.to_s + '                                                           |'
     puts '|                                                                        |'
     puts '|                                                                        |'
     puts '--------------------------------------------------------------------------'
