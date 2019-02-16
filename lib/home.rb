@@ -35,9 +35,9 @@ class Home
         puts 'Enter choice'
         innerchoice()
       when 2
-        @@cart.show_line_item
+        @@cart.check_cart
       when 3
-        @@cart.cart_total
+        @@cart.place_order
       when 0
         exit(0)
       else

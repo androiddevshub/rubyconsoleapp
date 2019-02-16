@@ -1,4 +1,4 @@
-require_relative 'item.rb'
+  require_relative 'item.rb'
 require_relative 'lineitem.rb'
 require_relative 'cart.rb'
 require_relative 'dbconn.rb'
@@ -13,8 +13,9 @@ class Inititem
         puts row["id"].to_s + "        " + row["price"].to_s +  "           " + row["stock"].to_s +  "            " + row["name"]
       end
       results.free
-    rescue
-      Connection.conn.close
+    rescue TypeError => e
+      puts "#{e.message}"
+      puts "#{e.backtrace.inspect}"
     end
   end
 
@@ -23,39 +24,47 @@ class Inititem
       statement = Connection.conn.prepare("INSERT INTO cart (item_id, item_name, item_price, item_quantity) VALUES (?, ?, ?, ?)")
       statement.execute(id, name, price, quantity)
       statement.close
-    ensure
-      Connection.conn.close
+    rescue TypeError => e
+      puts "#{e.message}"
+      puts "#{e.backtrace.inspect}"
     end
   end
 
   def cart_exist_item(input_id, id, name, price, quantity)
-    puts "id exist: " + name
     begin
-      statement = Connection.conn.prepare("SELECT * from cart where item_id IN (?) ")
+      # statement = Connection.conn.prepare("SELECT * from cart WHERE item_id = (?) LIMIT 1 ")
+      statement = Connection.conn.prepare("SELECT EXISTS(SELECT * FROM cart WHERE item_id = (?))")
       result3 = statement.execute(input_id)
-      results3.each do |row|
-        puts row["item_name"]
+      query = "EXISTS(SELECT * FROM cart WHERE item_id = (?))"
+      # puts "Exist = >" + result3.to_s
+      result3.each do |row|
+        if ( row[query] == 1 )
+          puts 'Already in cart'
+        else
+          puts 'Added to cart'
+          add_item(id, name, price, quantity)
+        end
       end
-    rescue
+    rescue TypeError => e
+      puts "#{e.message}"
+      puts "#{e.backtrace.inspect}"
       Connection.conn.close
     end
   end
 
   def stock_check(input_id, id, name, price, quantity)
-    puts "id : " + input_id.to_s
     begin
       statement = Connection.conn.prepare("SELECT stock from items where id IN (?) ")
       result2 = statement.execute(input_id)
       result2.each do |cs|
-        if cs["stock"] >= quantity
-          puts "id inside condition: " + name
+        if ( cs["stock"] >= quantity )
           cart_exist_item(input_id, id, name, price, quantity)
         else
           puts 'Not in stock'
         end
       end
-    rescue
-      Connection.conn.close
+    rescue TypeError => e      # only for debug purposes, don't rescue Exception in real code
+      puts "#{e.class}"
     end
   end
 
@@ -63,21 +72,27 @@ class Inititem
     begin
       puts 'Enter id : '
       input_id = gets.chomp.to_i
-      statement = Connection.conn.prepare("SELECT * from items where id IN (?) ")
+      query = 'EXISTS(SELECT * FROM items WHERE id = (?))'
+      statement = Connection.conn.prepare("SELECT "+ query)
       result1 = statement.execute(input_id)
       result1.each do |c|
-        if c["id"] == input_id
+        if ( c[query] == 1 )
           puts 'Item found'
-          puts c["id"].to_s + "        " + c["price"].to_s +  "           " + c["stock"].to_s +  "            " + c["name"]
-          puts 'Enter quantity : '
-          quantity = gets.chomp.to_i
-          stock_check(input_id, c["id"], c["name"], c["price"], quantity)
+          statement = Connection.conn.prepare("SELECT * FROM items WHERE id = (?) ")
+          result6 = statement.execute(input_id)
+          result6.each do |c|
+            puts c["id"].to_s + "        " + c["price"].to_s +  "           " + c["stock"].to_s +  "            " + c["name"]
+            puts 'Enter quantity : '
+            quantity = gets.chomp.to_i
+            stock_check(input_id, c["id"], c["name"], c["price"], quantity)
+          end
         else
           puts 'Item not found'
         end
       end
-    rescue
-      Connection.conn.close
+    rescue TypeError => e
+      puts "#{e.message}"
+      puts "#{e.backtrace.inspect}"
     end
   end
 

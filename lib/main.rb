@@ -1,6 +1,6 @@
 # This is class Order
-require_relative 'lib/home.rb'
-index = Home.new
+require_relative 'index.rb'
+index = Index.new
 puts('--------------------Welcome to Feel Free to Eat-----------------------')
 puts('')
 index.menu
